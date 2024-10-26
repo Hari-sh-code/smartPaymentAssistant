@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>FOOD CHATIE</title>
+</head>
+<body style="font-family:sans-serif;">
+    <div style="height: 1000px; color: #ffffff; background-image: url(/static/botimg.jpg); background-attachment: fixed; background-repeat: no-repeat; background-size: cover;">
+        <div class="topdabba" style="background-color: grey; position: fixed; width: 300px; border: solid; bottom: 100px; right: 27px; border-radius: 15px;">
+            <div class="dabba" style="background-color: #0388fc; border-radius: 15px; width: 280px; padding: 10px;">
+                <header style="text-align: center; overflow: hidden;">
+                    <h1 style="font-size: 1.4rem; color: #ffffff; margin: auto;">FOOD CHATIE</h1>
+                </header>
+            </div>
+            <div class="support" style="background-color: grey;">
+                <div id="chat-container" style="margin: 10px; height: 45vh; overflow-y: auto;">
+                    <p># Hey, how can I help you?</p>
+                </div>
+            </div>
+            <input type="text" id="user-input" placeholder="Type your message..." onkeydown="sendMessage(event)" style="width: 296px; border: 0; border-radius: 15px; height: 40px;">
+            <script>
+                function sendMessage(event) {
+                    if (event.key === "Enter") {
+                        const userMessage = document.getElementById("user-input").value;
+                        addMessage(userMessage, true);
+                        document.getElementById("user-input").value = "";
+
+                        fetch('http://localhost:5000/chat', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: userMessage })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => addMessage(data.message, false))
+                        .catch(error => {
+                            console.error("Error:", error);
+                            addMessage("Error: Could not get a response", false);
+                        });
+                    }
+                }
+
+                function addMessage(message, isUser) {
+                    const chatContainer = document.getElementById("chat-container");
+                    const messageElement = document.createElement("p");
+                    messageElement.textContent = message;
+                    messageElement.style.textAlign = isUser ? "right" : "left";
+                    chatContainer.appendChild(messageElement);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>
