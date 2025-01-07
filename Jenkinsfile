@@ -1,32 +1,32 @@
 pipeline {
-
     agent any
 
     stages {
-
-        stage("build"){
-
-            steps{
-
+        stage("Build") {
+            steps {
                 echo 'Building the application'
+                sh 'echo Running build commands...'
             }
         }
 
-        stage("test"){
-
-            steps{
-
+        stage("Test") {
+            steps {
                 echo 'Testing the application'
+                sh 'echo Running tests...'
             }
-
         }
 
-        stage("deploy"){
-
-            steps{
-
-                echo 'deploying the application'
+        stage("Deploy") {
+            steps {
+                echo 'Deploying the application'
+                sh 'echo Deploying to server...'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
         }
     }
 }
